@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter.messagebox
 from tkinter import ttk
 from curso_model import Curso
 from database import DB
@@ -36,7 +37,7 @@ class Menu():
     self.frame.pack()
     self.frame.config(bg = "#F9E1BE", width = "580", height = "330", relief = "ridge", bd = 12)
 
-    # Labels
+    # LABELS-----
     self.lbl_Nombre_curso = Label(self.frame, text = "Lenguajes Formales y de Programación", bg = "#F9E1BE", font = ("Comic Sans MS", 17))
     self.lbl_Nombre_curso.place(x = 72, y = 20)
 
@@ -46,8 +47,7 @@ class Menu():
     self.lbl_Carnet_estudiante = Label(self.frame, text = "carnet: 202103718", bg = "#F9E1BE", bd = 0, font = ("Arial", 12))
     self.lbl_Carnet_estudiante.place(x = 80, y = 140)
 
-    #BOTONES
-
+    # BUTTON-----
     self.btn_CargarArchivo = Button(self.frame, text = "Cargar Archivos",command = self.ir_pantalla_c, width = 19, height = 2, font = ("Arial", 9), bg = "#D5A273")
     self.btn_CargarArchivo.place(x = 335, y = 80)
 
@@ -65,27 +65,47 @@ class Menu():
 
 
 # ----------------------------------------------------------CARGAR-ARCHIVOS-------------------------------------------------------------------------
-class CargarArchivo():
+class CargarArchivo(Menu):
   def __init__(self):
     self.ventana = Tk()
     self.ventana.title("Cargar Archivos")
     self.ventana.iconbitmap("Extras/logo.ico")
     self.ventana.resizable(0,0)
     self.ventana.config(bg = "#BB0D6A", relief = "flat", bd = 16)
-    self.centrar(self.ventana, 600, 300)
+    super().centrar(self.ventana, 600, 300)
     self.ventana.geometry("600x300")
     self.ventana_frame()
-
-  def centrar(self, ventana, ancho, alto):
-    altura_pantalla = ventana.winfo_screenheight()
-    ancho_pantalla = ventana.winfo_screenwidth()
-    x = (ancho_pantalla//2) - (ancho//2)
-    y = (altura_pantalla//2) - (alto//2)
-    ventana.geometry(f"+{x}+{y}")
 
   def ir_pantalla_m(self):
     self.ventana.destroy()
     Menu()
+
+  def Insertar_archivo(self):
+    self.almacen_cursos = [] #[['017', 'Social Humanística 1', '7', '8', '1', '4', '0\n'], ...,  [...]]
+    ruta = self.tb_Ruta.get()
+    print(ruta)
+    with open("entrada.LFP", "r") as archivo:
+      self.lista_cursos = archivo.readlines()
+
+    # Almacenar cada linea en otra lista individual
+    for linea_curso in self.lista_cursos:
+      self.almacen_cursos.append(linea_curso.split(","))
+
+    for curso in self.almacen_cursos:
+      indice_curso = self.almacen_cursos.index(curso)
+        
+      codigo = self.almacen_cursos[indice_curso][0]
+      nombre = self.almacen_cursos[indice_curso][1]
+      prerequisito = self.almacen_cursos[indice_curso][2]
+      obligatorio = self.almacen_cursos[indice_curso][3]
+      semestre = self.almacen_cursos[indice_curso][4]
+      creditos = self.almacen_cursos[indice_curso][5]
+      estado = self.almacen_cursos[indice_curso][6]
+
+      curso = Curso(codigo, nombre, prerequisito, obligatorio, semestre, creditos, estado)
+      DB.Crear_curso(curso)
+    tkinter.messagebox.showinfo("Confirmación", "Archivo cargado exitosamente!")
+
 
   def ventana_frame(self):
     self.frame = Frame()
@@ -101,62 +121,27 @@ class CargarArchivo():
     self.tb_Ruta.place(x = 135, y = 78)
 
     # BUTTON------
-    self.btn_Seleccionar = Button(self.frame, text = "Seleccionar", width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
+    self.btn_Seleccionar = Button(self.frame, text = "Seleccionar", command = self.Insertar_archivo, width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
     self.btn_Seleccionar.place(x = 145, y = 147)
 
     self.btn_Regresar = Button(self.frame, text = "Regresar", command = self.ir_pantalla_m, width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
     self.btn_Regresar.place(x = 310, y = 147)
 
     self.frame.mainloop()
-  
-  almacen_cursos = [] #[['017', 'Social Humanística 1', '7', '8', '1', '4', '0\n'], ...,  [...]]
 
-  with open("entrada.LFP", "r") as archivo:
-    lista_cursos = archivo.readlines()
 
-  # Almacenar cada linea en otra lista individual
-  for linea_curso in lista_cursos:
-    #print(linea.rstrip())
-    almacen_cursos.append(linea_curso.split(","))
-
-    #print(almacen_cursos)
-    #print(".......................")
-    #print(almacen_cursos[0][0])#codigo
-    #print(almacen_cursos[0][1])#nombre
-  print("---------------------CAMBIO-----------------------------")
-  for curso in almacen_cursos:
-    indice_curso = almacen_cursos.index(curso)
-        
-    codigo = almacen_cursos[indice_curso][0]
-    nombre = almacen_cursos[indice_curso][1]
-    prerequisito = almacen_cursos[indice_curso][2]
-    obligatorio = almacen_cursos[indice_curso][3]
-    semestre = almacen_cursos[indice_curso][4]
-    creditos = almacen_cursos[indice_curso][5]
-    estado = almacen_cursos[indice_curso][6]
-
-    curso = Curso(codigo, nombre, prerequisito, obligatorio, semestre, creditos, estado)
-    
-    DB.Crear_curso(curso)
 
 # ---------------------------------------------------------GESTIONAR-ARCHIVOS-------------------------------------------------------------------------
-class Gestion_cursos():
+class Gestion_cursos(Menu):
   def __init__(self):
     self.ventana = Tk()
     self.ventana.title("Gestionar Curso")
     self.ventana.iconbitmap("Extras/logo.ico")
     self.ventana.resizable(0,0)
     self.ventana.config(bg = "#BB0D6A", relief = "flat", bd = 16)
-    self.centrar(self.ventana, 350, 320)
+    super().centrar(self.ventana, 350, 320)
     self.ventana.geometry("350x320")
     self.ventana_frame()
-
-  def centrar(self, ventana, ancho, alto):
-    altura_pantalla = ventana.winfo_screenheight()
-    ancho_pantalla = ventana.winfo_screenwidth()
-    x = (ancho_pantalla//2) - (ancho//2)
-    y = (altura_pantalla//2) - (alto//2)
-    ventana.geometry(f"+{x}+{y}")
 
   def ir_pantalla_m(self):
     self.ventana.destroy()
@@ -174,7 +159,10 @@ class Gestion_cursos():
     self.ventana.destroy()
     Editar_curso()
     
-
+  def ir_pantalla_ec(self):
+    self.ventana.destroy()
+    Eliminar_curso()
+    
   def ventana_frame(self):
     self.frame = Frame()
     self.frame.pack()
@@ -190,7 +178,7 @@ class Gestion_cursos():
     self.btn_Editar_curso = Button(self.frame, text = "Editar Curso", width = 14, command = self.ir_pantalla_e, height = 1, font = ("Arial", 9), bg = "#E7C09C")
     self.btn_Editar_curso.place(x = 90, y = 117)
 
-    self.btn_Eliminar_curso = Button(self.frame, text = "Eliminar Curso", width = 14, height = 1, font = ("Arial", 9), bg = "#E7C09C")
+    self.btn_Eliminar_curso = Button(self.frame, text = "Eliminar Curso", width = 14, command = self.ir_pantalla_ec, height = 1, font = ("Arial", 9), bg = "#E7C09C")
     self.btn_Eliminar_curso.place(x = 90, y = 165)  
 
     self.btn_Regresar = Button(self.frame, text = "Regresar", command = self.ir_pantalla_m, width = 10, height = 1, font = ("Arial", 9), bg = "#E7C09C")
@@ -199,23 +187,16 @@ class Gestion_cursos():
     self.frame.mainloop() 
 
 # ----------------------------------------------------------LISTAR-CURSOS-------------------------------------------------------------------------
-class listar_cursos():
+class listar_cursos(Menu):
   def __init__(self):
     self.ventana = Tk()
     self.ventana.title("Listar Cursos")
     self.ventana.iconbitmap("Extras/logo.ico")
     self.ventana.resizable(0,0)
     self.ventana.config(bg = "#BB0D6A", relief = "flat", bd = 16)
-    self.centrar(self.ventana, 800, 460)
+    super().centrar(self.ventana, 800, 460)
     self.ventana.geometry("800x460")
     self.ventana_frame()
-
-  def centrar(self, ventana, ancho, alto):
-    altura_pantalla = ventana.winfo_screenheight()
-    ancho_pantalla = ventana.winfo_screenwidth()
-    x = (ancho_pantalla//2) - (ancho//2)
-    y = (altura_pantalla//2) - (alto//2)
-    ventana.geometry(f"+{x}+{y}")
 
   def ir_pantalla_g(self):
     self.ventana.destroy()
@@ -272,27 +253,25 @@ class listar_cursos():
 
 
 # ---------------------------------------------------------AGREGAR-CURSO-------------------------------------------------------------------------
-class Agregar_curso():
+class Agregar_curso(Menu):
   def __init__(self):
     self.ventana = Tk()
     self.ventana.title("Agregar Curso")
     self.ventana.iconbitmap("Extras/logo.ico")
     self.ventana.resizable(0,0)
     self.ventana.config(bg = "#BB0D6A", relief = "flat", bd = 16)
-    self.centrar(self.ventana, 670, 465)
+    super().centrar(self.ventana, 670, 465)
     self.ventana.geometry("670x465")
     self.ventana_frame()
-
-  def centrar(self, ventana, ancho, alto):
-    altura_pantalla = ventana.winfo_screenheight()
-    ancho_pantalla = ventana.winfo_screenwidth()
-    x = (ancho_pantalla//2) - (ancho//2)
-    y = (altura_pantalla//2) - (alto//2)
-    ventana.geometry(f"+{x}+{y}")
 
   def ir_pantalla_g(self):
     self.ventana.destroy()
     Gestion_cursos()
+
+  def btn_Agregar(self):
+    curso = Curso(self.tb_Codigo.get(), self.tb_Nombre.get(), self.tb_Prerequisito.get(), self.tb_Obligatorio.get(), self.tb_Semestre.get(), self.tb_Creditos.get(), self.tb_Estado.get())
+    DB.Crear_curso(curso)
+    tkinter.messagebox.showinfo("Confirmación", "¡Curso agregado exitosamente!")
 
   def ventana_frame(self):
     self.frame = Frame()
@@ -344,34 +323,27 @@ class Agregar_curso():
     self.tb_Estado.place(x = 160, y = 342)
 
     # BUTTON-----
-    self.btn_Agregar = Button(self.frame, text = "Agregar", width = 14, height = 3, font = ("Arial", 9), bg = "#E7C09C")
-    self.btn_Agregar.place(x = 460, y = 130)
+    self.btn_Agregar = Button(self.frame, text = "Agregar", command = self.btn_Agregar, width = 14, height = 3, font = ("Arial", 9), bg = "#E7C09C")
+    self.btn_Agregar.place(x = 487, y = 130)
 
     self.btn_Regresar = Button(self.frame, text = "Regresar", command = self.ir_pantalla_g, width = 14, height = 3, font = ("Arial", 9), bg = "#E7C09C")
-    self.btn_Regresar.place(x = 460, y = 225)
+    self.btn_Regresar.place(x = 487, y = 225)
 
     self.frame.mainloop() 
-
+  
 
 
 # ---------------------------------------------------------EDITAR-CURSO-------------------------------------------------------------------------
-class Editar_curso():
+class Editar_curso(Menu):
   def __init__(self):
     self.ventana = Tk()
     self.ventana.title("Editar Curso")
     self.ventana.iconbitmap("Extras/logo.ico")
     self.ventana.resizable(0,0)
     self.ventana.config(bg = "#BB0D6A", relief = "flat", bd = 16)
-    self.centrar(self.ventana, 670, 465)
+    super().centrar(self.ventana, 670, 465)
     self.ventana.geometry("670x465")
     self.ventana_frame()
-
-  def centrar(self, ventana, ancho, alto):
-    altura_pantalla = ventana.winfo_screenheight()
-    ancho_pantalla = ventana.winfo_screenwidth()
-    x = (ancho_pantalla//2) - (ancho//2)
-    y = (altura_pantalla//2) - (alto//2)
-    ventana.geometry(f"+{x}+{y}")
 
   def ir_pantalla_g(self):
     self.ventana.destroy()
@@ -428,14 +400,51 @@ class Editar_curso():
 
     # BUTTON-----
     self.btn_Editar = Button(self.frame, text = "Editar", width = 14, height = 3, font = ("Arial", 9), bg = "#E7C09C")
-    self.btn_Editar.place(x = 460, y = 130)
+    self.btn_Editar.place(x = 487, y = 130)
 
     self.btn_Regresar = Button(self.frame, text = "Regresar", command = self.ir_pantalla_g, width = 14, height = 3, font = ("Arial", 9), bg = "#E7C09C")
-    self.btn_Regresar.place(x = 460, y = 225)
+    self.btn_Regresar.place(x = 487, y = 225)
 
     self.frame.mainloop() 
 
-# ---------------------------------------------------------ELIMINAR-CURSO-------------------------------------------------------------------------
 
+
+# ---------------------------------------------------------ELIMINAR-CURSO-------------------------------------------------------------------------
+class Eliminar_curso(Menu):
+  def __init__(self):
+    self.ventana = Tk()
+    self.ventana.title("Eliminar Curso")
+    self.ventana.iconbitmap("Extras/logo.ico")
+    self.ventana.resizable(0,0)
+    self.ventana.config(bg = "#BB0D6A", relief = "flat", bd = 16)
+    super().centrar(self.ventana, 515, 235)
+    self.ventana.geometry("515x235")
+    self.ventana_frame()
+
+  def ir_pantalla_g(self):
+    self.ventana.destroy()
+    Gestion_cursos()
+
+  def ventana_frame(self):
+    self.frame = Frame()
+    self.frame.pack()
+    self.frame.config(bg = "#F9E1BE", width = "495", height = "215", relief = "ridge", bd = 12)
+
+    # LABEL-----
+    self.lbl_Codigo_curso = Label(self.frame, text = "Código de curso:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.lbl_Codigo_curso.place(x = 63, y = 38)
+
+    # TEXFIELD-----
+    self.tb_Codigo_curso = Entry(self.frame, font = "Arial", width = 16, justify = "center")
+    self.tb_Codigo_curso.place(x = 218, y = 41)
+
+    # BUTTON------
+    self.btn_Eliminar = Button(self.frame, text = "Eliminar", width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
+    self.btn_Eliminar.place(x = 98, y = 100)
+
+    self.btn_Regresar = Button(self.frame, text = "Regresar", command = self.ir_pantalla_g, width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
+    self.btn_Regresar.place(x = 248, y = 100)
+
+    self.frame.mainloop()
 
 Menu()
