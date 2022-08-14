@@ -82,7 +82,6 @@ class CargarArchivo(Menu):
   def __Insertar_archivo(self):
     self.almacen_cursos = [] #[['017', 'Social Humanística 1', '7', '8', '1', '4', '0\n'], ...,  [...]]
     ruta = self.__tb_Ruta.get()
-    print(ruta)
     with open("entrada.LFP", "r") as archivo:
       self.lista_cursos = archivo.readlines()
 
@@ -215,9 +214,7 @@ class listar_cursos(Menu):
     self.tabla.heading("#5", text = "Créditos", anchor = CENTER)
     self.tabla.heading("#6", text = "Estado", anchor = CENTER)
     
-    cursos = DB.Curso_prueba()
-    print("hola")
-    print(cursos[1].getNombre())
+    cursos = DB.Recibir_curso()
 
     for curso in cursos:
       indice_curso = cursos.index(curso)
@@ -259,6 +256,7 @@ class Agregar_curso(Menu):
     Gestion_cursos()
 
   def __btn_Agregar_curso(self):
+    
     curso = Curso(self.__tb_Codigo.get(), self.__tb_Nombre.get(), self.__tb_Prerequisito.get(), self.__tb_Obligatorio.get(), self.__tb_Semestre.get(), self.__tb_Creditos.get(), self.__tb_Estado.get())
     DB.Crear_curso(curso)
     tkinter.messagebox.showinfo("Confirmación", "¡Curso agregado exitosamente!")
@@ -336,6 +334,23 @@ class Editar_curso(Menu):
     self.ventana.destroy()
     Gestion_cursos()
 
+  def __Mostrar_curso(self):
+    curso = DB.Mostrar_curso(self.__tb_Codigo.get())
+
+    if curso is not None:
+      self.__tb_Nombre.insert(0, curso.getNombre())
+      self.__tb_Prerequisito.insert(0, curso.getPrerequisito())
+      self.__tb_Obligatorio.insert(0, curso.getObligatorio())
+      self.__tb_Semestre.insert(0, curso.getSemestre())
+      self.__tb_Creditos.insert(0, curso.getCreditos())
+      self.__tb_Estado.insert(0, curso.getEstado())
+    else:
+      tkinter.messagebox.showinfo("Error", "El curso con código: "+ self.__tb_Codigo.get() + ", no existe." )
+    
+  def __Editar_curso(self):
+    DB.Actualizar_curso(self.__tb_Codigo.get(), self.__tb_Nombre.get(), self.__tb_Prerequisito.get(), self.__tb_Semestre.get(), self.__tb_Obligatorio.get(), self.__tb_Creditos.get(), self.__tb_Estado.get())
+    tkinter.messagebox.showinfo("Confirmación", "¡Curso Editado exitosamente!")
+
   def ventana_frame(self):
     self.frame = Frame()
     self.frame.pack()
@@ -345,7 +360,6 @@ class Editar_curso(Menu):
     self.__lbl_Codigo = Label(self.frame, text = "Código:", bg = "#F9E1BE", font = ("Arial", 12))
     self.__lbl_Codigo.place(x = 45, y = 40)
 
-    # BUTTON-----
     self.__lbl_Nombre = Label(self.frame, text = "Nombre:", bg = "#F9E1BE", font = ("Arial", 12))
     self.__lbl_Nombre.place(x = 45, y = 90)
     
@@ -387,11 +401,14 @@ class Editar_curso(Menu):
     self.__tb_Estado.place(x = 160, y = 342)
 
     # BUTTON-----
-    self.__btn_Editar = Button(self.frame, text = "Editar", width = 14, height = 3, font = ("Arial", 9), bg = "#E7C09C")
-    self.__btn_Editar.place(x = 487, y = 130)
+    self.__btn_Mostrar = Button(self.frame, text = "Mostrar", command = self.__Mostrar_curso, width = 14, height = 3, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Mostrar.place(x = 487, y = 100)
+    
+    self.__btn_Editar = Button(self.frame, text = "Editar", command = self.__Editar_curso, width = 14, height = 3, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Editar.place(x = 487, y = 180)
 
     self.__btn_Regresar = Button(self.frame, text = "Regresar", command = self.__ir_pantalla_gestion_curso, width = 14, height = 3, font = ("Arial", 9), bg = "#E7C09C")
-    self.__btn_Regresar.place(x = 487, y = 225)
+    self.__btn_Regresar.place(x = 487, y = 260)
 
     self.frame.mainloop() 
 
