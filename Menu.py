@@ -10,7 +10,7 @@ class Menu():
     self.ventana.title("Menú Principal")
     self.centrar(self.ventana, 600, 350)
     self.ventana.geometry("600x350")
-    self.ventana_frame()
+    self.Ventana_frame()
 
   def General_ventana(self):
     self.ventana = Tk()
@@ -33,8 +33,12 @@ class Menu():
   def __ir_pantalla_gestion_curso(self):
     self.ventana.destroy()
     Gestion_cursos()
-  # ----------------------------------
-  def ventana_frame(self):
+
+  def __ir_pantalla_conteo_creditos(self):
+    self.ventana.destroy()
+    Conteo_creditos()
+
+  def Ventana_frame(self):
     self.frame = Frame()
     self.frame.pack()
     self.frame.config(bg = "#F9E1BE", width = "580", height = "330", relief = "ridge", bd = 12)
@@ -56,7 +60,7 @@ class Menu():
     self.__btn_GestionarCursos = Button(self.frame, text = "Gestionar Archivos", command = self.__ir_pantalla_gestion_curso, width = 19, height = 2, font = ("Arial", 9), bg = "#D5A273")
     self.__btn_GestionarCursos.place(x = 335, y = 155)
 
-    self.__btn_ConteoCreditos = Button(self.frame, text = "Conteo de Créditos", width = 19, height = 2, font = ("Arial", 9), bg = "#D5A273")
+    self.__btn_ConteoCreditos = Button(self.frame, text = "Conteo de Créditos", command = self.__ir_pantalla_conteo_creditos, width = 19, height = 2, font = ("Arial", 9), bg = "#D5A273")
     self.__btn_ConteoCreditos.place(x = 335, y = 230)
 
     self.__btn_Salir = Button(self.frame, text = "Salir", width = 11, height = 2, font = ("Arial", 10), bg = "#E7C09C")
@@ -66,14 +70,14 @@ class Menu():
 
 
 
-# ----------------------------------------------------------CARGAR-ARCHIVOS-------------------------------------------------------------------------
+# -------------------------------------------------------CARGAR-ARCHIVOS-------------------------------------------------------------------------
 class CargarArchivo(Menu):
   def __init__(self):
     super().General_ventana()
     self.ventana.title("Cargar Archivos")
     super().centrar(self.ventana, 600, 300)
     self.ventana.geometry("600x300")
-    self.ventana_frame()
+    self.Ventana_frame()
 
   def __ir_pantalla_menu(self):
     self.ventana.destroy()
@@ -104,7 +108,7 @@ class CargarArchivo(Menu):
       DB.Crear_curso(curso)
     tkinter.messagebox.showinfo("Confirmación", "Archivo cargado exitosamente!")
 
-  def ventana_frame(self):
+  def Ventana_frame(self):
     self.frame = Frame()
     self.frame.pack()
     self.frame.config(bg = "#F9E1BE", width = "580", height = "280", relief = "ridge", bd = 12)
@@ -128,14 +132,14 @@ class CargarArchivo(Menu):
 
 
 
-# ---------------------------------------------------------GESTIONAR-ARCHIVOS-------------------------------------------------------------------------
+# ---------------------------------------------------GESTIONAR-ARCHIVOS-------------------------------------------------------------------------
 class Gestion_cursos(Menu):
   def __init__(self):
     super().General_ventana()
     self.ventana.title("Gestionar Curso")
     super().centrar(self.ventana, 350, 320)
     self.ventana.geometry("350x320")
-    self.ventana_frame()
+    self.Ventana_frame()
 
   def __ir_pantalla_menu(self):
     self.ventana.destroy()
@@ -157,7 +161,7 @@ class Gestion_cursos(Menu):
     self.ventana.destroy()
     Eliminar_curso()
     
-  def ventana_frame(self):
+  def Ventana_frame(self):
     self.frame = Frame()
     self.frame.pack()
     self.frame.config(bg = "#F9E1BE", width = "330", height = "300", relief = "ridge", bd = 12)
@@ -180,14 +184,14 @@ class Gestion_cursos(Menu):
 
     self.frame.mainloop() 
 
-# ----------------------------------------------------------LISTAR-CURSOS-------------------------------------------------------------------------
+# ----------------------------------------------------LISTAR-CURSOS-------------------------------------------------------------------------
 class listar_cursos(Menu):
   def __init__(self):
     super().General_ventana()
     self.ventana.title("Listar Cursos")
     super().centrar(self.ventana, 800, 460)
     self.ventana.geometry("800x460")
-    self.Ventana_frame()
+    self.__Ventana_frame()
 
   def __ir_pantalla_gestion_curso(self):
     self.ventana.destroy()
@@ -228,7 +232,7 @@ class listar_cursos(Menu):
       estado = cursos[indice_curso].getEstado()
       self.tabla.insert("", END, text = codigo, values = (nombre, prerequisito, obligatorio, semestre, creditos, estado))
 
-  def Ventana_frame(self):
+  def __Ventana_frame(self):
     self.frame = Frame()
     self.frame.pack()
     self.frame.config(bg = "#F9E1BE", width = "780", height = "430", relief = "ridge", bd = 12)
@@ -242,14 +246,14 @@ class listar_cursos(Menu):
 
 
 
-# ---------------------------------------------------------AGREGAR-CURSO-------------------------------------------------------------------------
+# -------------------------------------------------AGREGAR-CURSO-------------------------------------------------------------------------
 class Agregar_curso(Menu):
   def __init__(self):
     super().General_ventana()
     self.ventana.title("Agregar Curso")
     super().centrar(self.ventana, 670, 465)
     self.ventana.geometry("670x465")
-    self.ventana_frame()
+    self.__Ventana_frame()
 
   def __ir_pantalla_gestion_curso(self):
     self.ventana.destroy()
@@ -261,7 +265,7 @@ class Agregar_curso(Menu):
     DB.Crear_curso(curso)
     tkinter.messagebox.showinfo("Confirmación", "¡Curso agregado exitosamente!")
 
-  def ventana_frame(self):
+  def __Ventana_frame(self):
     self.frame = Frame()
     self.frame.pack()
     self.frame.config(bg = "#F9E1BE", width = "650", height = "435", relief = "ridge", bd = 12)
@@ -321,14 +325,14 @@ class Agregar_curso(Menu):
   
 
 
-# ---------------------------------------------------------EDITAR-CURSO-------------------------------------------------------------------------
+# ---------------------------------------------------EDITAR-CURSO-------------------------------------------------------------------------
 class Editar_curso(Menu):
   def __init__(self):
     super().General_ventana()
     self.ventana.title("Editar Curso")
     super().centrar(self.ventana, 670, 465)
     self.ventana.geometry("670x465")
-    self.ventana_frame()
+    self.__Ventana_frame()
 
   def __ir_pantalla_gestion_curso(self):
     self.ventana.destroy()
@@ -351,7 +355,7 @@ class Editar_curso(Menu):
     DB.Actualizar_curso(self.__tb_Codigo.get(), self.__tb_Nombre.get(), self.__tb_Prerequisito.get(), self.__tb_Semestre.get(), self.__tb_Obligatorio.get(), self.__tb_Creditos.get(), self.__tb_Estado.get())
     tkinter.messagebox.showinfo("Confirmación", "¡Curso Editado exitosamente!")
 
-  def ventana_frame(self):
+  def __Ventana_frame(self):
     self.frame = Frame()
     self.frame.pack()
     self.frame.config(bg = "#F9E1BE", width = "650", height = "435", relief = "ridge", bd = 12)
@@ -414,20 +418,61 @@ class Editar_curso(Menu):
 
 
 
-# ---------------------------------------------------------ELIMINAR-CURSO-------------------------------------------------------------------------
+# ------------------------------------------------ELIMINAR-CURSO-------------------------------------------------------------------------
 class Eliminar_curso(Menu):
   def __init__(self):
     super().General_ventana()
     self.ventana.title("Eliminar Curso")
     super().centrar(self.ventana, 515, 235)
     self.ventana.geometry("515x235")
-    self.ventana_frame()
+    self.__Ventana_frame()
 
   def __ir_pantalla_gestion_curso(self):
     self.ventana.destroy()
     Gestion_cursos()
 
-  def ventana_frame(self):
+  def __Eliminar_curso(self):
+    if DB.Eliminar_curso(self.__tb_Codigo_curso.get()) is not None:
+      tkinter.messagebox.showinfo("Confirmación", "¡Curso Eliminado exitosamente!")
+    else:
+      tkinter.messagebox.showinfo("Error", "El curso con código: "+ self.__tb_Codigo_curso.get() + ", no existe.")
+
+  def __Ventana_frame(self):
+    self.frame = Frame()
+    self.frame.pack()
+    self.frame.config(bg = "#F9E1BE", width = "495", height = "215", relief = "ridge", bd = 12)
+
+    # LABEL-----
+    self.__lbl_Codigo_curso = Label(self.frame, text = "Código de curso:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Codigo_curso.place(x = 63, y = 38)
+
+    # TEXFIELD-----
+    self.__tb_Codigo_curso = Entry(self.frame, font = "Arial", width = 16, justify = "center")
+    self.__tb_Codigo_curso.place(x = 218, y = 41)
+
+    # BUTTON------
+    self.__btn_Eliminar = Button(self.frame, text = "Eliminar", command = self.__Eliminar_curso, width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Eliminar.place(x = 98, y = 100)
+
+    self.__btn_Regresar = Button(self.frame, text = "Regresar", command = self.__ir_pantalla_gestion_curso, width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Regresar.place(x = 248, y = 100)
+
+    self.frame.mainloop()
+
+# ----------------------------------------------CONTEO-DE-CREDITOS-------------------------------------------------------------------------
+class Conteo_creditos(Menu):
+  def __init__(self):
+    super().General_ventana()
+    self.ventana.title("Conteo Créditos")
+    super().centrar(self.ventana, 515, 235)
+    self.ventana.geometry("515x235")
+    self.Ventana_frame()
+
+  def __ir_pantalla_Menu(self):
+    self.ventana.destroy()
+    Menu()
+
+  def Ventana_frame(self):
     self.frame = Frame()
     self.frame.pack()
     self.frame.config(bg = "#F9E1BE", width = "495", height = "215", relief = "ridge", bd = 12)
@@ -444,7 +489,7 @@ class Eliminar_curso(Menu):
     self.__btn_Eliminar = Button(self.frame, text = "Eliminar", width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
     self.__btn_Eliminar.place(x = 98, y = 100)
 
-    self.__btn_Regresar = Button(self.frame, text = "Regresar", command = self.__ir_pantalla_gestion_curso, width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Regresar = Button(self.frame, text = "Regresar", command = self.__ir_pantalla_Menu, width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
     self.__btn_Regresar.place(x = 248, y = 100)
 
     self.frame.mainloop()
