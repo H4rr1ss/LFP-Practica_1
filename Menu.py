@@ -89,8 +89,11 @@ class CargarArchivo(Menu):
     with open("entrada.LFP", "r") as archivo:
       self.lista_cursos = archivo.readlines()
 
-    # Almacenar cada linea en otra lista individual
-    for linea_curso in self.lista_cursos:
+    # Almacenar cada linea en otra lista individual, Quitar caracteres especiales "\n"
+    self.lista_cursos_string = str(list(map(str.strip, self.lista_cursos)))
+    self.lista_cursos_entrada = eval(self.lista_cursos_string)
+
+    for linea_curso in self.lista_cursos_entrada:
       self.almacen_cursos.append(linea_curso.split(","))
 
     for curso in self.almacen_cursos:
@@ -105,7 +108,7 @@ class CargarArchivo(Menu):
       estado = self.almacen_cursos[indice_curso][6]
 
       curso = Curso(codigo, nombre, prerequisito, obligatorio, semestre, creditos, estado)
-      DB.Crear_curso(curso)
+      DB.Crear_curso(curso, codigo)
     tkinter.messagebox.showinfo("Confirmación", "Archivo cargado exitosamente!")
 
   def Ventana_frame(self):
@@ -260,9 +263,8 @@ class Agregar_curso(Menu):
     Gestion_cursos()
 
   def __btn_Agregar_curso(self):
-    
     curso = Curso(self.__tb_Codigo.get(), self.__tb_Nombre.get(), self.__tb_Prerequisito.get(), self.__tb_Obligatorio.get(), self.__tb_Semestre.get(), self.__tb_Creditos.get(), self.__tb_Estado.get())
-    DB.Crear_curso(curso)
+    DB.Crear_curso(curso, self.__tb_Codigo.get())
     tkinter.messagebox.showinfo("Confirmación", "¡Curso agregado exitosamente!")
 
   def __Ventana_frame(self):
@@ -464,8 +466,8 @@ class Conteo_creditos(Menu):
   def __init__(self):
     super().General_ventana()
     self.ventana.title("Conteo Créditos")
-    super().centrar(self.ventana, 515, 235)
-    self.ventana.geometry("515x235")
+    super().centrar(self.ventana, 590, 480)
+    self.ventana.geometry("590x480")
     self.Ventana_frame()
 
   def __ir_pantalla_Menu(self):
@@ -475,22 +477,54 @@ class Conteo_creditos(Menu):
   def Ventana_frame(self):
     self.frame = Frame()
     self.frame.pack()
-    self.frame.config(bg = "#F9E1BE", width = "495", height = "215", relief = "ridge", bd = 12)
+    self.frame.config(bg = "#F9E1BE", width = "570", height = "450", relief = "ridge", bd = 12)    
 
     # LABEL-----
-    self.__lbl_Codigo_curso = Label(self.frame, text = "Código de curso:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
-    self.__lbl_Codigo_curso.place(x = 63, y = 38)
+    self.__lbl_Creditos_aprobados = Label(self.frame, text = "Créditos aprobados:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_aprobados.place(x = 160, y = 25)
+    self.__lbl_Creditos_cursando_text = Label(self.frame, text = "XX", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_cursando_text.place(x = 333, y = 25)
+
+    self.__lbl_Creditos_cursando = Label(self.frame, text = "Créditos cursando:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_cursando.place(x = 160, y = 75)
+    self.__lbl_Creditos_cursando_text = Label(self.frame, text = "XX", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_cursando_text.place(x = 333, y = 77)
+
+    self.__lbl_Creditos_pendientes = Label(self.frame, text = "Créditos pendientes:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_pendientes.place(x = 160, y = 125)
+    self.__lbl_Creditos_pendientes_text = Label(self.frame, text = "XX", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_pendientes_text.place(x = 333, y = 125)
+  #-------------------------------------------------------------------------------------------------------
+    self.__lbl_Creditos_obligatorios = Label(self.frame, text = "Créditos obligatorios hasta semestre:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_obligatorios.place(x = 60, y = 195)
+    self.__lbl_Creditos_obligatorios_text1 = Label(self.frame, text = "Creditos: ", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_obligatorios_text1.place(x = 130, y = 233)
+    self.__lbl_Creditos_obligatorios_text2 = Label(self.frame, text = "XX", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_obligatorios_text2.place(x = 200, y = 233)
+
+    self.__lbl_Creditos_semestre = Label(self.frame, text = "Créditos del semestre:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_semestre.place(x = 58, y = 310)
+    self.__lbl_Creditos_semestre_text1 = Label(self.frame, text = "Creditos: ", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_semestre_text1.place(x = 93, y = 348)
+    self.__lbl_Creditos_semestre_text2 = Label(self.frame, text = "XX", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_semestre_text2.place(x = 163, y = 348)
 
     # TEXFIELD-----
-    self.__tb_Codigo_curso = Entry(self.frame, font = "Arial", width = 16, justify = "center")
-    self.__tb_Codigo_curso.place(x = 218, y = 41)
+    self.__tb_Creditos_obligatorios = Entry(self.frame, font = "Arial", width = 5, justify = "center")
+    self.__tb_Creditos_obligatorios.place(x = 370, y = 197)
+
+    self.__tb_Creditos_semestre = Entry(self.frame, font = "Arial", width = 5, justify = "center")
+    self.__tb_Creditos_semestre.place(x = 255, y = 312)
 
     # BUTTON------
-    self.__btn_Eliminar = Button(self.frame, text = "Eliminar", width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
-    self.__btn_Eliminar.place(x = 98, y = 100)
+    self.__btn_Contar_creditos_obligatorios = Button(self.frame, text = "Contar", width = 10, height = 1, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Contar_creditos_obligatorios.place(x = 245, y = 236)
+    
+    self.__btn_Contar_Creditos_semestre = Button(self.frame, text = "Contar", width = 10, height = 1, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Contar_Creditos_semestre.place(x = 205, y = 351)
 
-    self.__btn_Regresar = Button(self.frame, text = "Regresar", command = self.__ir_pantalla_Menu, width = 13, height = 2, font = ("Arial", 9), bg = "#E7C09C")
-    self.__btn_Regresar.place(x = 248, y = 100)
+    self.__btn_Regresar = Button(self.frame, text = "Regresar", command = self.__ir_pantalla_Menu, width = 12, height = 2, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Regresar.place(x = 410, y = 355)
 
     self.frame.mainloop()
 
