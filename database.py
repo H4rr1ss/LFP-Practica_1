@@ -1,14 +1,32 @@
 class Database():
     def __init__(self):
-        self._cursos = []
+        self._cursos = []#Almacena los objetos "get set"
         self._codigos = []
         self._creditos = []
 
-    def Crear_curso(self, curso):#curso es el objeto entonces tengo acceso a los atributos
+    def Crear(self, curso):
         self._cursos.append(curso)
         self._codigos.append(curso.getCodigo())
-        print(self._codigos)
         self._creditos.append(curso.getCreditos())
+
+    def __Verificacion_curso_nuevo(self, curso_nuevo, codigo):
+        print(self._codigos)
+        for curso in self._cursos:
+            if curso.getCodigo() == codigo:
+                print(self._codigos.count(str(codigo)))
+                self._cursos.remove(curso)
+                self._codigos.remove(curso.getCodigo())
+                print("LISTA ACTUALIZADA:")
+                self.Crear(curso_nuevo)
+                print(self._codigos)
+                return True
+
+    def Crear_curso(self, curso, codigo):#curso es el objeto entonces tengo acceso a los atributos
+        if codigo in self._codigos:#Si ya existe el código ingresado
+            print("si se encuentra ya credado")
+            self.__Verificacion_curso_nuevo(curso, codigo)
+        else:# Si no existe el código ingresado, lo creara
+            self.Crear(curso)
         
     def Recibir_curso(self):
         return self._cursos
