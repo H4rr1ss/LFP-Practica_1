@@ -13,3 +13,14 @@ print(lista_nueva)
 
 print("Esta es la cantidad de veces que repite 017: ", lista_nueva.count("017"))
 print("Esta es la posicion del primer elemento 017 que hay en lista: ", lista_nueva.index("017"))
+
+print(".........................................................................................................")
+lista_numeros = ["12", "42", "8", "12"]
+suma = 0
+for numero in lista_numeros:
+    suma += int(numero)
+    print(numero)
+
+print("-----")
+print(suma)
+print(lista_numeros)
