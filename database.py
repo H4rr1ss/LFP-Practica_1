@@ -3,11 +3,12 @@ class Database():
         self._cursos = []#Almacena los objetos "get set"
         self._codigos = []
         self._creditos = []
-
-    def Crear(self, curso):
+    # ---------------------------CREAR CURSO NUEVO---------------------------
+    def __Crear(self, curso):
         self._cursos.append(curso)
         self._codigos.append(curso.getCodigo())
         self._creditos.append(curso.getCreditos())
+        print(self._creditos)
 
     def __Verificacion_curso_nuevo(self, curso_nuevo, codigo):
         print(self._codigos)
@@ -26,8 +27,60 @@ class Database():
             print("si se encuentra ya credado")
             self.__Verificacion_curso_nuevo(curso, codigo)
         else:# Si no existe el código ingresado, lo creara
-            self.Crear(curso)
-        
+            self.__Crear(curso)
+    # -----------------------------------------------------------------------
+
+    # ---------------------------CRÉDITOS GENERALES--------------------------
+    def Devolver_creditos_aprobados(self):
+        total_creditos = 0
+        for curso in self._cursos:
+            if curso.getEstado() == "0":
+                total_creditos += int(curso.getCreditos())
+        return total_creditos
+
+    def Devolver_creditos_cursando(self):
+        total_creditos = 0
+        for curso in self._cursos:
+            if curso.getEstado() == "1":
+                total_creditos += int(curso.getCreditos())
+        return total_creditos
+    
+    def Devolver_creditos_pendiente(self):
+        total_creditos = 0
+        for curso in self._cursos:
+            if curso.getEstado() == "-1" and curso.getObligatorio() == "1":
+                total_creditos += int(curso.getCreditos())
+        return total_creditos
+    # -----------------------------------------------------------------------
+
+    def Devolver_creditos_semestreN(self, semestre):
+        total_creditos = 0
+        for curso in self._cursos:
+            if curso.getObligatorio() == "1" and (int(curso.getSemestre()) <= int(semestre)):
+                total_creditos += int(curso.getCreditos())
+        return total_creditos
+
+    def Devolver_creditos_semestre_aprobados(self, semestre):
+        total_creditos = 0
+        for curso in self._cursos:
+            if int(curso.getSemestre()) == int(semestre) and curso.getEstado() == "0":
+                total_creditos += int(curso.getCreditos())
+        return total_creditos
+    
+    def Devolver_creditos_semestre_cursando(self, semestre):
+        total_creditos = 0
+        for curso in self._cursos:
+            if int(curso.getSemestre()) == int(semestre) and curso.getEstado() == "1":
+                total_creditos += int(curso.getCreditos())
+        return total_creditos
+
+    def Devolver_creditos_semestre_pendientes(self, semestre):
+        total_creditos = 0
+        for curso in self._cursos:
+            if int(curso.getSemestre()) == int(semestre) and curso.getEstado() == "-1":
+                total_creditos += int(curso.getCreditos())
+        return total_creditos
+
     def Recibir_curso(self):
         return self._cursos
 
@@ -53,10 +106,7 @@ class Database():
             if curso.getCodigo() == codigo:
                 self._cursos.remove(curso)
                 self._codigos.remove(codigo)
-                print("-------CAMBIO-------")
-                print(self._codigos)
                 return True
-
         return None
 
 DB = Database()

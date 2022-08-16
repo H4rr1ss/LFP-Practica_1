@@ -470,6 +470,20 @@ class Conteo_creditos(Menu):
     self.ventana.geometry("590x480")
     self.Ventana_frame()
 
+  def __Creditos_semestreN(self):
+    Cant_creditos_SemestreN = DB.Devolver_creditos_semestreN(self.__tb_Creditos_obligatorios.get())
+    self.__lbl_Creditos_obligatorios_text2.configure(text = Cant_creditos_SemestreN)
+
+  def __Creditos_de_Semestre(self):
+    Cant_creditos_semestre = DB.Devolver_creditos_semestre_aprobados(self.__tb_Creditos_semestre.get())
+    self.__lbl_Creditos_semestre_text1_2.configure(text = Cant_creditos_semestre)
+
+    Cant_creditos_semestre = DB.Devolver_creditos_semestre_cursando(self.__tb_Creditos_semestre.get())
+    self.__lbl_Creditos_semestre_text2_2.configure(text = Cant_creditos_semestre)
+
+    Cant_creditos_semestre = DB.Devolver_creditos_semestre_pendientes(self.__tb_Creditos_semestre.get())
+    self.__lbl_Creditos_semestre_text3_2.configure(text = Cant_creditos_semestre)
+
   def __ir_pantalla_Menu(self):
     self.ventana.destroy()
     Menu()
@@ -482,49 +496,57 @@ class Conteo_creditos(Menu):
     # LABEL-----
     self.__lbl_Creditos_aprobados = Label(self.frame, text = "Créditos aprobados:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
     self.__lbl_Creditos_aprobados.place(x = 160, y = 25)
-    self.__lbl_Creditos_cursando_text = Label(self.frame, text = "XX", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_cursando_text = Label(self.frame, text = DB.Devolver_creditos_aprobados(), bg = "#F9E1BE", font = ("Comic Sans MS", 13))
     self.__lbl_Creditos_cursando_text.place(x = 333, y = 25)
 
     self.__lbl_Creditos_cursando = Label(self.frame, text = "Créditos cursando:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
     self.__lbl_Creditos_cursando.place(x = 160, y = 75)
-    self.__lbl_Creditos_cursando_text = Label(self.frame, text = "XX", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_cursando_text = Label(self.frame, text = DB.Devolver_creditos_cursando(), bg = "#F9E1BE", font = ("Comic Sans MS", 13))
     self.__lbl_Creditos_cursando_text.place(x = 333, y = 77)
 
     self.__lbl_Creditos_pendientes = Label(self.frame, text = "Créditos pendientes:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
     self.__lbl_Creditos_pendientes.place(x = 160, y = 125)
-    self.__lbl_Creditos_pendientes_text = Label(self.frame, text = "XX", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
+    self.__lbl_Creditos_pendientes_text = Label(self.frame, text = DB.Devolver_creditos_pendiente(), bg = "#F9E1BE", font = ("Comic Sans MS", 13))
     self.__lbl_Creditos_pendientes_text.place(x = 333, y = 125)
   #-------------------------------------------------------------------------------------------------------
     self.__lbl_Creditos_obligatorios = Label(self.frame, text = "Créditos obligatorios hasta semestre:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
-    self.__lbl_Creditos_obligatorios.place(x = 60, y = 195)
+    self.__lbl_Creditos_obligatorios.place(x = 90, y = 195)
     self.__lbl_Creditos_obligatorios_text1 = Label(self.frame, text = "Creditos: ", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
-    self.__lbl_Creditos_obligatorios_text1.place(x = 130, y = 233)
-    self.__lbl_Creditos_obligatorios_text2 = Label(self.frame, text = "XX", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
-    self.__lbl_Creditos_obligatorios_text2.place(x = 200, y = 233)
+    self.__lbl_Creditos_obligatorios_text1.place(x = 160, y = 233)
+    self.__lbl_Creditos_obligatorios_text2 = Label(self.frame, bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_obligatorios_text2.place(x = 230, y = 233)
 
     self.__lbl_Creditos_semestre = Label(self.frame, text = "Créditos del semestre:", bg = "#F9E1BE", font = ("Comic Sans MS", 13))
-    self.__lbl_Creditos_semestre.place(x = 58, y = 310)
-    self.__lbl_Creditos_semestre_text1 = Label(self.frame, text = "Creditos: ", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
-    self.__lbl_Creditos_semestre_text1.place(x = 93, y = 348)
-    self.__lbl_Creditos_semestre_text2 = Label(self.frame, text = "XX", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
-    self.__lbl_Creditos_semestre_text2.place(x = 163, y = 348)
+    self.__lbl_Creditos_semestre.place(x = 88, y = 310)
+    self.__lbl_Creditos_semestre_text1 = Label(self.frame, text = "Aprobados: ", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_semestre_text1.place(x = 330, y = 310)
+    self.__lbl_Creditos_semestre_text1_2 = Label(self.frame, bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_semestre_text1_2.place(x = 420, y = 310)
+    self.__lbl_Creditos_semestre_text2 = Label(self.frame, text = "Cursando: ", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_semestre_text2.place(x = 330, y = 341)
+    self.__lbl_Creditos_semestre_text2_2 = Label(self.frame, bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_semestre_text2_2.place(x = 420, y = 341)
+    self.__lbl_Creditos_semestre_text3 = Label(self.frame, text = "Pendientes: ", bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_semestre_text3.place(x = 329, y = 372)
+    self.__lbl_Creditos_semestre_text3_2 = Label(self.frame, bg = "#F9E1BE", font = ("Comic Sans MS", 12))
+    self.__lbl_Creditos_semestre_text3_2.place(x = 420, y = 372)
 
     # TEXFIELD-----
-    self.__tb_Creditos_obligatorios = Entry(self.frame, font = "Arial", width = 5, justify = "center")
-    self.__tb_Creditos_obligatorios.place(x = 370, y = 197)
+    self.__tb_Creditos_obligatorios = Entry(self.frame, font = "Arial", width = 3, justify = "center")
+    self.__tb_Creditos_obligatorios.place(x = 400, y = 197)
 
-    self.__tb_Creditos_semestre = Entry(self.frame, font = "Arial", width = 5, justify = "center")
-    self.__tb_Creditos_semestre.place(x = 255, y = 312)
+    self.__tb_Creditos_semestre = Entry(self.frame, font = "Arial", width = 3, justify = "center")
+    self.__tb_Creditos_semestre.place(x = 280, y = 312)
 
     # BUTTON------
-    self.__btn_Contar_creditos_obligatorios = Button(self.frame, text = "Contar", width = 10, height = 1, font = ("Arial", 9), bg = "#E7C09C")
-    self.__btn_Contar_creditos_obligatorios.place(x = 245, y = 236)
+    self.__btn_Contar_creditos_obligatorios = Button(self.frame, text = "Contar", command = self.__Creditos_semestreN, width = 10, height = 1, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Contar_creditos_obligatorios.place(x = 265, y = 236)
     
-    self.__btn_Contar_Creditos_semestre = Button(self.frame, text = "Contar", width = 10, height = 1, font = ("Arial", 9), bg = "#E7C09C")
-    self.__btn_Contar_Creditos_semestre.place(x = 205, y = 351)
+    self.__btn_Contar_Creditos_semestre = Button(self.frame, text = "Contar", command = self.__Creditos_de_Semestre, width = 10, height = 1, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Contar_Creditos_semestre.place(x = 190, y = 351)
 
-    self.__btn_Regresar = Button(self.frame, text = "Regresar", command = self.__ir_pantalla_Menu, width = 12, height = 2, font = ("Arial", 9), bg = "#E7C09C")
-    self.__btn_Regresar.place(x = 410, y = 355)
+    self.__btn_Regresar = Button(self.frame, text = "Regresar", command = self.__ir_pantalla_Menu, width = 9, height = 1, font = ("Arial", 9), bg = "#E7C09C")
+    self.__btn_Regresar.place(x = 10, y = 380)
 
     self.frame.mainloop()
 
