@@ -74,24 +74,27 @@ class CargarArchivo(Menu):
 
   def __Insertar_archivo(self):
     self.almacen_cursos = [] #[['017', 'Social Humanística 1', '7', '8', '1', '4', '0\n'], ...,  [...]]
-    with open(self.__tb_Ruta.get(), "r") as archivo:
-      self.lista_cursos = archivo.readlines()
+    if not self.__tb_Ruta.get():
+      tkinter.messagebox.showinfo("Error", "Por favor ingrese la ruta.")
+    else:
+      with open(self.__tb_Ruta.get(), "r") as archivo:
+        self.lista_cursos = archivo.readlines()
 
-    # Almacenar cada linea en otra lista individual, Quitar caracteres especiales "\n"
-    self.lista_cursos_string = str(list(map(str.strip, self.lista_cursos)))
-    self.lista_cursos_entrada = eval(self.lista_cursos_string)
+      # Almacenar cada linea en otra lista individual, Quitar caracteres especiales "\n"
+      self.lista_cursos_string = str(list(map(str.strip, self.lista_cursos)))
+      self.lista_cursos_entrada = eval(self.lista_cursos_string)
 
-    for linea_curso in self.lista_cursos_entrada:
-      self.almacen_cursos.append(linea_curso.split(","))
+      for linea_curso in self.lista_cursos_entrada:
+        self.almacen_cursos.append(linea_curso.split(","))
 
-    for curso in self.almacen_cursos:
-      indice_curso = self.almacen_cursos.index(curso)
-      codigo = self.almacen_cursos[indice_curso][0]
-      curso = Curso(codigo, self.almacen_cursos[indice_curso][1], self.almacen_cursos[indice_curso][2], 
-      self.almacen_cursos[indice_curso][3], self.almacen_cursos[indice_curso][4], self.almacen_cursos[indice_curso][5], self.almacen_cursos[indice_curso][6])
+      for curso in self.almacen_cursos:
+        indice_curso = self.almacen_cursos.index(curso)
+        codigo = self.almacen_cursos[indice_curso][0]
+        curso = Curso(codigo, self.almacen_cursos[indice_curso][1], self.almacen_cursos[indice_curso][2], 
+        self.almacen_cursos[indice_curso][3], self.almacen_cursos[indice_curso][4], self.almacen_cursos[indice_curso][5], self.almacen_cursos[indice_curso][6])
       
-      DB.Crear_curso(curso, codigo)
-    tkinter.messagebox.showinfo("Confirmación", "Archivo cargado exitosamente!")
+        DB.Crear_curso(curso, codigo)
+      tkinter.messagebox.showinfo("Confirmación", "Archivo cargado exitosamente!")
 
   def Ventana_frame(self):
     self.frame = Frame()
@@ -234,8 +237,13 @@ class Agregar_curso(Menu):
     curso = Curso(self.__tb_Codigo.get(), self.__tb_Nombre.get(), self.__tb_Prerequisito.get(), self.__tb_Obligatorio.get(),
     self.__tb_Semestre.get(), self.__tb_Creditos.get(), self.__tb_Estado.get())
 
-    DB.Crear_curso(curso, self.__tb_Codigo.get())
-    tkinter.messagebox.showinfo("Confirmación", "¡Curso agregado exitosamente!")
+    if not self.__tb_Codigo.get():
+      tkinter.messagebox.showinfo("Error", "Por favor ingrese datos.")
+    elif int(self.__tb_Semestre.get()) > 10:
+      tkinter.messagebox.showinfo("Error", "Por favor ingrese un semestre válido.")
+    else:
+      DB.Crear_curso(curso, self.__tb_Codigo.get())
+      tkinter.messagebox.showinfo("Confirmación", "¡Curso agregado exitosamente!")
 
   def __Ventana_frame(self):
     self.frame = Frame()
@@ -314,8 +322,11 @@ class Editar_curso(Menu):
       tkinter.messagebox.showinfo("Error", "El curso con código: " + self.__tb_Codigo.get() + ", no existe." )
     
   def __Editar_curso(self):
-    DB.Actualizar_curso(self.__tb_Codigo.get(), self.__tb_Nombre.get(), self.__tb_Prerequisito.get(), self.__tb_Obligatorio.get(), self.__tb_Semestre.get(), self.__tb_Creditos.get(), self.__tb_Estado.get())
-    tkinter.messagebox.showinfo("Confirmación", "¡Curso Editado exitosamente!")
+    if int(self.__tb_Semestre.get()) > 10:
+      tkinter.messagebox.showinfo("Error", "Por favor ingrese un semestre válido.")
+    else:
+      DB.Actualizar_curso(self.__tb_Codigo.get(), self.__tb_Nombre.get(), self.__tb_Prerequisito.get(), self.__tb_Obligatorio.get(), self.__tb_Semestre.get(), self.__tb_Creditos.get(), self.__tb_Estado.get())
+      tkinter.messagebox.showinfo("Confirmación", "¡Curso Editado exitosamente!")
 
   def __Ventana_frame(self):
     self.frame = Frame()
@@ -423,22 +434,32 @@ class Conteo_creditos(Menu):
     Menu()
 
   def __Creditos_semestreN(self):
-    Cant_creditos_SemestreN = DB.Devolver_creditos_semestreN(self.__tb_Creditos_obligatorios.get())
-    self.__lbl_Creditos_obligatorios_text2.configure(text = Cant_creditos_SemestreN)
+    if not self.__tb_Creditos_obligatorios.get():
+      tkinter.messagebox.showinfo("Error", "Por favor ingrese datos.")
+    elif int(self.__tb_Creditos_obligatorios.get()) > 10:
+      tkinter.messagebox.showinfo("Error", "Por favor ingrese un semestre válido.")
+    else:
+      Cant_creditos_SemestreN = DB.Devolver_creditos_semestreN(self.__tb_Creditos_obligatorios.get())
+      self.__lbl_Creditos_obligatorios_text2.configure(text = Cant_creditos_SemestreN)
 
   def __Creditos_de_Semestre(self):
-    Cant_creditos_semestre = DB.Devolver_creditos_semestre_aprobados(self.__tb_Creditos_semestre.get())
-    self.__lbl_Creditos_semestre_text1_2.configure(text = Cant_creditos_semestre)
+    if not self.__tb_Creditos_semestre.get():
+      tkinter.messagebox.showinfo("Error", "Por favor ingrese datos.")
+    elif int(self.__tb_Creditos_semestre.get()) > 10:
+      tkinter.messagebox.showinfo("Error", "Por favor ingrese un semestre válido.")
+    else:
+      Cant_creditos_semestre = DB.Devolver_creditos_semestre_aprobados(self.__tb_Creditos_semestre.get())
+      self.__lbl_Creditos_semestre_text1_2.configure(text = Cant_creditos_semestre)
 
-    Cant_creditos_semestre = DB.Devolver_creditos_semestre_cursando(self.__tb_Creditos_semestre.get())
-    self.__lbl_Creditos_semestre_text2_2.configure(text = Cant_creditos_semestre)
+      Cant_creditos_semestre = DB.Devolver_creditos_semestre_cursando(self.__tb_Creditos_semestre.get())
+      self.__lbl_Creditos_semestre_text2_2.configure(text = Cant_creditos_semestre)
 
-    Cant_creditos_semestre = DB.Devolver_creditos_semestre_pendientes(self.__tb_Creditos_semestre.get())
-    self.__lbl_Creditos_semestre_text3_2.configure(text = Cant_creditos_semestre)
+      Cant_creditos_semestre = DB.Devolver_creditos_semestre_pendientes(self.__tb_Creditos_semestre.get())
+      self.__lbl_Creditos_semestre_text3_2.configure(text = Cant_creditos_semestre)
 
-    self.__lbl_Creditos_semestre_text1.configure(text = "Aprobados: ")
-    self.__lbl_Creditos_semestre_text2.configure(text = "Cursando: ")
-    self.__lbl_Creditos_semestre_text3.configure(text = "Pendientes: ")
+      self.__lbl_Creditos_semestre_text1.configure(text = "Aprobados: ")
+      self.__lbl_Creditos_semestre_text2.configure(text = "Cursando: ")
+      self.__lbl_Creditos_semestre_text3.configure(text = "Pendientes: ")
 
   def Ventana_frame(self):
     self.frame = Frame()
@@ -490,6 +511,6 @@ class Conteo_creditos(Menu):
     
     self.__btn_Contar_Creditos_semestre = Button(self.frame, text = "Contar", command = self.__Creditos_de_Semestre, width = 10, height = 1, font = ("Arial", 9), bg = "#E7C09C").place(x = 190, y = 351)
 
-    self.__btn_Regresar = Button(self.frame, text = "Regresar", command = self.__ir_pantalla_Menu, width = 9, height = 1, font = ("Arial", 9), bg = "#E7C09C").place(x = 10, y = 380)
+    self.__btn_Regresar = Button(self.frame, text = "Regresar", command = self.__ir_pantalla_Menu, width = 9, height = 1, font = ("Arial", 9), bg = "#E7C09C").place(x = 10, y = 385)
     self.frame.mainloop()
 Menu()

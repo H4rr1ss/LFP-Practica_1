@@ -2,7 +2,6 @@ class Database():
     def __init__(self):
         self._cursos = []#Almacena los objetos 
         self._codigos = []
-
     # ---------------------------CREAR CURSO NUEVO---------------------------
     def __Crear(self, curso):
         self._cursos.append(curso)
@@ -106,5 +105,4 @@ class Database():
                 total_creditos += int(curso.getCreditos())
         return total_creditos
     # -----------------------------------------------------------------------
-
 DB = Database()
