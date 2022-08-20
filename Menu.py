@@ -50,13 +50,13 @@ class Menu():
     self.__lbl_Carnet_estudiante = Label(self.frame, text = "carnet: 202103718", bg = "#F9E1BE", bd = 0, font = ("Arial", 12)).place(x = 80, y = 140)
 
     # BUTTON-----
-    self.__btn_CargarArchivo = Button(self.frame, text = "Cargar Archivos",command = self.__ir_pantalla_cargar_curso, width = 19, height = 2, font = ("Arial", 9), bg = "#D5A273").place(x = 335, y = 80)
+    self.__btn_CargarArchivo = Button(self.frame, text = "Cargar Archivos", command = self.__ir_pantalla_cargar_curso, width = 19, height = 2, font = ("Arial", 9), bg = "#D5A273").place(x = 335, y = 80)
 
     self.__btn_GestionarCursos = Button(self.frame, text = "Gestionar Archivos", command = self.__ir_pantalla_gestion_curso, width = 19, height = 2, font = ("Arial", 9), bg = "#D5A273").place(x = 335, y = 155)
 
     self.__btn_ConteoCreditos = Button(self.frame, text = "Conteo de Créditos", command = self.__ir_pantalla_conteo_creditos, width = 19, height = 2, font = ("Arial", 9), bg = "#D5A273").place(x = 335, y = 230)
 
-    self.__btn_Salir = Button(self.frame, text = "Salir", width = 11, height = 2, font = ("Arial", 10), bg = "#E7C09C").place(x = 115, y = 215)
+    self.__btn_Salir = Button(self.frame, text = "Salir", command = self.ventana.quit, width = 11, height = 2, font = ("Arial", 10), bg = "#E7C09C").place(x = 115, y = 215)
     self.frame.mainloop()  
 
 # -------------------------------------------------------CARGAR-ARCHIVOS-------------------------------------------------------------------------
@@ -88,12 +88,16 @@ class CargarArchivo(Menu):
         self.almacen_cursos.append(linea_curso.split(","))
 
       for curso in self.almacen_cursos:
-        indice_curso = self.almacen_cursos.index(curso)
-        codigo = self.almacen_cursos[indice_curso][0]
-        curso = Curso(codigo, self.almacen_cursos[indice_curso][1], self.almacen_cursos[indice_curso][2], 
-        self.almacen_cursos[indice_curso][3], self.almacen_cursos[indice_curso][4], self.almacen_cursos[indice_curso][5], self.almacen_cursos[indice_curso][6])
-      
-        DB.Crear_curso(curso, codigo)
+        print(curso)
+        if curso == [""]:
+          break
+        else:
+          indice_curso = self.almacen_cursos.index(curso)
+          codigo = self.almacen_cursos[indice_curso][0]
+          curso = Curso(codigo, self.almacen_cursos[indice_curso][1], self.almacen_cursos[indice_curso][2], 
+          self.almacen_cursos[indice_curso][3], self.almacen_cursos[indice_curso][4], self.almacen_cursos[indice_curso][5], self.almacen_cursos[indice_curso][6])
+        
+          DB.Crear_curso(curso, codigo)
       tkinter.messagebox.showinfo("Confirmación", "Archivo cargado exitosamente!")
 
   def Ventana_frame(self):
