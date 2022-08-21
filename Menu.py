@@ -14,7 +14,6 @@ class Menu():
 
   def General_ventana(self):
     self.ventana = Tk()
-    self.ventana.iconbitmap("Extras/logo.ico")
     self.ventana.resizable(0,0)
     self.ventana.config(bg = "#BB0D6A", relief = "flat", bd = 16)
 
@@ -77,7 +76,7 @@ class CargarArchivo(Menu):
     if not self.__tb_Ruta.get():
       tkinter.messagebox.showinfo("Error", "Por favor ingrese la ruta.")
     else:
-      with open(self.__tb_Ruta.get(), "r") as archivo:
+      with open(self.__tb_Ruta.get(), encoding = "utf8") as archivo:
         self.lista_cursos = archivo.readlines()
 
       # Almacenar cada linea en otra lista individual, Quitar caracteres especiales "\n"
@@ -88,7 +87,6 @@ class CargarArchivo(Menu):
         self.almacen_cursos.append(linea_curso.split(","))
 
       for curso in self.almacen_cursos:
-        print(curso)
         if curso == [""]:
           break
         else:
